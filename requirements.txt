@@ -6,6 +6,6 @@ Pillow
 drf-yasg
 python-decouple
 django-filter
-django-allauth
+# django-allauth
 # social-auth-app-django
-# django-rest-framework-social-oauth2
+django-rest-framework-social-oauth2

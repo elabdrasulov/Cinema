@@ -12,6 +12,7 @@ class MovieSerializer(serializers.ModelSerializer):
         rep['comments'] = CommentSerializer(instance.comments.all(), many=True).data
         rep['rating'] = instance.average_rating
         rep['likes'] = instance.likes.all().count()
+        rep['favorites'] = instance.favorites.filter(favorited=True).count()
         return rep
 
 class CategorySerializer(serializers.ModelSerializer):

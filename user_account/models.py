@@ -34,7 +34,7 @@ class CustomUserManager(BaseUserManager):
         return user
     
 class User(AbstractUser):
-    email = models.EmailField(max_length=150, unique=True)
+    email = models.EmailField(max_length=150)
     username = models.CharField(max_length=150, blank=True, null=True)
     activation_code = models.CharField(max_length=8, blank=True)
     
@@ -77,4 +77,6 @@ class User(AbstractUser):
         """
         send_mail("Please confirm", message, "cinema@gmail.com", [self.email, ])
 
+    def __str__(self) -> str:
+        return f'{self.username} -> {self.email}'
 

@@ -21,6 +21,8 @@ from django.conf import settings
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
+from .views import Home
+
 schema_view = get_schema_view(
     openapi.Info(
         title='Cinema API',
@@ -32,10 +34,13 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
+    path('chat/', include('chat.urls')),
     path('user_account/', include('user_account.urls')),
     path('docs/', schema_view.with_ui('swagger')),
-    path('', include('movie.urls')),
+    path('movie/', include('movie.urls')),
+    path('accounts/', include('allauth.urls')),
+    path("", Home.as_view(), name="home"),
+    # path('auth/', include('rest_framework_social_oauth2.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

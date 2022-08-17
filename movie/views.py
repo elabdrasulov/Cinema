@@ -55,56 +55,71 @@ class CommentViewSet(ModelViewSet):
         return context
 
 
-class LikeViewSet(ModelViewSet):
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
+# class LikeViewSet(ModelViewSet):
+#     queryset = Movie.objects.all()
+#     serializer_class = MovieSerializer
 
-    @action(detail=True, methods=['GET'])
-    def toggle_like(self, request, pk):
-        user = request.user
-        movie = get_object_or_404(Movie, id=pk)
+@api_view(['GET'])
+def toggle_like(request, m_id):
+    user = request.user
+    movie = get_object_or_404(Movie, id=m_id)
 
-        if Like.objects.filter(user=user, movie=movie).exists():
-            Like.objects.filter(user=user, movie=movie).delete()
-        else:
-            Like.objects.create(user=user, movie=movie)
-        return Response("Like toggled", 200)
+    if Like.objects.filter(user=user, movie=movie).exists():
+        Like.objects.filter(user=user, movie=movie).delete()
+    else:
+        Like.objects.create(user=user, movie=movie)
+    return Response("Like toggled", 200)
 
-class FavoriteViewSet(ModelViewSet):
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
+# class FavoriteViewSet(ModelViewSet):
+#     queryset = Favorite.objects.all()
+#     serializer_class = FavoriteSerializer
 
-    @action(detail=True, methods=['GET'])
-    def add_to_favorite(self, request, pk):
-        user = request.user
-        movie = get_object_or_404(Movie, id=pk)   
-        favorited_obj = Favorite.objects.get(user=user, movie=movie)
+    # @action(detail=True, methods=['GET'])
+    # def add_to_favorite(self, request, pk):
+    #     user = request.user
+    #     movie = get_object_or_404(Movie, id=pk)   
+    #     favorited_obj = Favorite.objects.get(user=user, movie=movie)
 
-        if favorited_obj.favorited == False:
-            favorited_obj.favorited = not favorited_obj.favorited
-            favorited_obj.save()
-            return Response('Added to favorite')
-        else:
-            favorited_obj.favorited = not favorited_obj.favorited
-            favorited_obj.save()
-            return Response('Deleted from favorites')
+    #     if favorited_obj.favorited == False:
+    #         favorited_obj.favorited = not favorited_obj.favorited
+    #         favorited_obj.save()
+    #         return Response('Added to favorite')
+    #     else:
+    #         favorited_obj.favorited = not favorited_obj.favorited
+    #         favorited_obj.save()
+    #         return Response('Deleted from favorites')
+
+@api_view(['GET'])
+def add_to_favorite(request, m_id):
+    user = request.user
+    movie = get_object_or_404(Movie, id=m_id)
+
+    if Favorite.objects.filter(user=user, movie=movie).exists():
+        Favorite.objects.filter(user=user, movie=movie).delete()
+        return Response('Deleted from favorite')
+    else:
+        Favorite.objects.create(user=user, movie=movie, favorited=True)
+        return Response('Added to favorites')
 
 class FavoriteView(ListAPIView):
-    queryset = Movie.objects.all()
+    queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = [IsAuthenticated, ]
 
+    def filter_queryset(self, queryset):
+        new_queryset = queryset.filter(user=self.request.user)
+        return new_queryset
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = queryset.filter(favorite__user=self.request.user, favorite__favorited=True)
-        return queryset
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     queryset = queryset.filter(favorites__user=self.request.user, favorites__favorited=True)
+    #     return queryset
 
 
 @api_view(['POST'])
-def add_rating(request, p_id):
+def add_rating(request, m_id):
     user = request.user
-    movie = get_object_or_404(Movie, id=p_id)
+    movie = get_object_or_404(Movie, id=m_id)
     value = request.POST.get("value")
 
     if not user.is_authenticated:

@@ -3,18 +3,6 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-CATEGORY   = [
-    ('POPULAR', 'POPULAR'),
-    ('MOVIES', 'MOVIES'),
-    ('CARTOON', 'CARTOON'),
-]
-
-class Category(models.Model):
-    title = models.CharField(choices=CATEGORY, max_length=100)
-
-    def __str__(self):
-        return self.title
-
 
 GENRE  = [
     ('ACTION', 'Action'),
@@ -24,10 +12,16 @@ GENRE  = [
     ('COMEDY', 'Comedy'),
 ]
 
-class Movie(models.Model):
-    categories = models.ManyToManyField(Category, related_name='movies')
+class Category(models.Model):
     title = models.CharField(max_length=100)
-    genre = models.CharField(choices=GENRE, max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Movie(models.Model):
+    categories = models.ManyToManyField(Category, related_name='movies', blank=True)
+    title = models.CharField(max_length=100)
+    genre = models.CharField(choices=GENRE, max_length=100, blank=True)
     year = models.DateField(blank=True, null=True)
     image = models.ImageField(upload_to='movies', blank=True, null=True)
     director = models.CharField(max_length=100, blank=True)

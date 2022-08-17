@@ -44,16 +44,20 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
+
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.vk',
+    "allauth.socialaccount.providers.github",
     # 'social_django',
     # 'oauth2_provider',
     # 'rest_framework_social_oauth2',
 
-
     #apps
     'user_account',
     'movie',
+    'chat'
 ]
 
 MIDDLEWARE = [
@@ -71,7 +75,10 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR/'templates'/'social',
+            BASE_DIR/'templates'/'chat', 
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -154,6 +161,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        # 'rest_framework_social_oauth2.authentication.SocialAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
@@ -184,3 +193,16 @@ ACTIVATE_USERS_EMAIL = True
 EMAIL_USE_SSL = False
 
 SITE_ID=1
+ACCOUNT_EMAIL_VERIFICATION = "none"
+LOGIN_REDIRECT_URL = "home"
+ACCOUNT_LOGOUT_ON_GET = True
+
+# SOCIAL_AUTH_VK_OAUTH2_KEY = '51401801'
+# SOCIAL_AUTH_VK_OAUTH2_SECRET = 'KMpbkRX6G2yDDDtZIUse'
+
+AUTHENTICATION_BACKENDS = (
+    # 'social_core.backends.vk.VKOAuth2',
+    # 'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
