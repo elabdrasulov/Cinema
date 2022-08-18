@@ -16,7 +16,7 @@ class Category(models.Model):
     title = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return self.title
 
 class Movie(models.Model):
     categories = models.ManyToManyField(Category, related_name='movies', blank=True)
@@ -35,7 +35,7 @@ class Movie(models.Model):
             return sum(ratings) / len(ratings)
         else:
             return 0 
-    
+
     def __str__(self):
         return self.title
 

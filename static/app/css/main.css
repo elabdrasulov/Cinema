@@ -1,0 +1,4 @@
+body {
+    background: #c7b39b url("{% static 'images/bg.jpg' %}");
+    color: #fff;
+}

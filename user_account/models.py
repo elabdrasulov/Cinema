@@ -34,7 +34,7 @@ class CustomUserManager(BaseUserManager):
         return user
     
 class User(AbstractUser):
-    email = models.EmailField(max_length=150)
+    email = models.EmailField(max_length=150, unique=True)
     username = models.CharField(max_length=150, blank=True, null=True)
     activation_code = models.CharField(max_length=8, blank=True)
     

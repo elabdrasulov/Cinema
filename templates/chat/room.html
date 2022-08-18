@@ -1,12 +1,14 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body {
   margin: 0 auto;
-  max-width: 800px;
+  max-width: 400px;
   padding: 0 20px;
+  opacity: 0.9;
 }
 
 .container {
@@ -56,14 +58,16 @@ body {
 </head>
 <body>
 
-<h2>{{ room }} - Chat</h2>
+<div align="center">
+  <h2>{{ room }} - chat</h2>
+  <style>
+    div {
+      color: black;
+    }
+  </style>
+</div>
 
 <div id="display">
-
-<!-- <div class="container darker">
-  <b>Tom</b><p>Hello Everyone, How Are You Guys Doing?</p>
-  <span class="time-left">20th, April 2021</span>
-</div> -->
 
 </div>
 
@@ -100,7 +104,7 @@ setInterval(function(){
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 50px;
     box-sizing: border-box;
     }
 
@@ -111,18 +115,21 @@ setInterval(function(){
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
-    border-radius: 4px;
+    border-radius: 50px;
     cursor: pointer;
     }
 
     input[type=submit]:hover {
     background-color: #45a049;
+    opacity: 2;
+    border-radius: 50px;
     }
 
     div {
-    border-radius: 5px;
+    border-radius: 50px;
+    border-style: groove;
     background-color: #f2f2f2;
-    padding: 20px;
+    padding: 30px;
     }
     </style>
 
@@ -158,5 +165,11 @@ setInterval(function(){
     document.getElementById('message').value = ''
   });
 </script>
+<style>
+  body {
+   background: #c7b39b url("{% static 'chat-bg.jpg' %}");
+   color: #fff;
+  }
+</style>
 
 </html>

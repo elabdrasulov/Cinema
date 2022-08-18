@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view, action
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .permissions import IsAuthor
 
@@ -19,23 +20,29 @@ class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [
+        filters.OrderingFilter, 
+        filters.SearchFilter, 
+        DjangoFilterBackend,
+    ]
+    filterset_fields = ['title', 'year',]
+    search_fields = ['title', 'year',]
     ordering_fields = ['title', 'year', 'average_rating']
 
-    @swagger_auto_schema(manual_parameters=[
-        openapi.Parameter("title", 
-                          openapi.IN_QUERY, 
-                          "search products by title", 
-                          type=openapi.TYPE_STRING)])
-    @action(methods=['GET'], detail=False)
-    def search(self, request):
-        title = request.query_params.get("title")
-        queryset = self.get_queryset()
-        if title:
-            queryset = queryset.filter(title__icontains=title)
+    # @swagger_auto_schema(manual_parameters=[
+    #     openapi.Parameter("title", 
+    #                       openapi.IN_QUERY, 
+    #                       "search products by title", 
+    #                       type=openapi.TYPE_STRING)])
+    # @action(methods=['GET'], detail=False)
+    # def search(self, request):
+    #     title = request.query_params.get("title")
+    #     queryset = self.get_queryset()
+    #     if title:
+    #         queryset = queryset.filter(title__icontains=title)
 
-        serializer = MovieSerializer(queryset, many=True, context={"request":request})
-        return Response(serializer.data, 200)
+    #     serializer = MovieSerializer(queryset, many=True, context={"request":request})
+    #     return Response(serializer.data, 200)
 
 
 class CategoryViewSet(ModelViewSet):
